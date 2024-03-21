@@ -1,0 +1,93 @@
+version: '3.9'
+
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:rw"
+      - "/sys:/sys:ro"
+      - "/dev/disk/:/dev/disk:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+    privileged: true
+
+  alertmanager:
+    image: prom/alertmanager
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+    restart: always
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    restart: unless-stopped
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - '9090:9090'
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--web.enable-lifecycle'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+    network_mode: host
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+
+  frontend:
+    container_name: react-app
+    build: ./Containerisation-React-Django-App/ComputexFrontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+  
+  backend:
+    container_name: django-bk
+    build: ./Containerisation-React-Django-App/Computex
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+
+  database:
+    image: postgres
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=recipe
+    volumes:
+      - ddata:/var/lib/postgresql/data
+
+
+volumes:
+  ddata:
+  prometheus-data: {}
+  grafana-data: {}
+
+

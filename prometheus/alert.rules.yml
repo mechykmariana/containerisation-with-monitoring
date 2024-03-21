@@ -1,0 +1,21 @@
+groups:
+- name: HighCPUusage
+  rules:
+  - alert: HighCPUUsage
+    expr: node_cpu_seconds_total / node_cpu_seconds_total{mode="idle"} > 0.01
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High CPU Usage"
+      description: "The CPU usage is above 1% for 5 minutes."
+
+- name: TestAlert
+  rules:
+  - alert: TestAlert
+    expr: vector(1)  # This expression always evaluates to 1, triggering the alert
+    labels:
+      severity: critical
+    annotations:
+      summary: "Test Alert"
+      description: "This is a test alert for email notification."
