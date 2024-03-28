@@ -43,6 +43,9 @@ services:
     restart: unless-stopped
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml
+      - ./prometheus/rules.yml:/etc/prometheus/rules.yml
+        # - ./prometheus/alert.rules2.yml:/etc/prometheus/alert.rules2.yml
       - prometheus-data:/prometheus
     command:
       - '--web.enable-lifecycle'
