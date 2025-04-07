@@ -112,12 +112,12 @@ resource "aws_instance" "app_server" {
 
   provisioner "file" {
     source      = "${path.module}/../../alertmanager"
-    destination = "/home/ubuntu/app/alertmanager"
+    destination = "/home/ubuntu/app/alertmanager/"
   }
 
   provisioner "file" {
     source      = "${path.module}/../../prometheus"
-    destination = "/home/ubuntu/app/prometheus"
+    destination = "/home/ubuntu/app/prometheus/"
   }
 
   tags = {
