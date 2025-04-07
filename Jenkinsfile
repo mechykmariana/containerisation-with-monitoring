@@ -48,7 +48,7 @@ pipeline {
         expression { return params.RECREATE_INFRA == true }
       }
       steps {
-        dir('terraform') {
+        dir('terraform/aws') {
           sh 'terraform destroy -auto-approve || true'
         }
       }
@@ -67,7 +67,7 @@ pipeline {
 
     stage('Terraform Apply') {
       steps {
-        dir('terraform') {
+        dir('terraform/aws') {
           sh 'terraform apply -auto-approve'
         }
       }
