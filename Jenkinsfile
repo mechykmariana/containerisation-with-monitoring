@@ -50,7 +50,9 @@ pipeline {
       steps {
         dir('terraform/aws') {
           withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
-          sh 'terraform destroy -auto-approve || true'
+            withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY')]) {
+          sh 'terraform destroy -auto-approve || true -var "private_key_path=$SSH_KEY"'
+            }
           }
         }
       }
@@ -71,7 +73,9 @@ pipeline {
       steps {
         dir('terraform/aws') {
           withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
-          sh 'terraform apply -auto-approve'
+            withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY')]) {
+          sh 'terraform apply -auto-approve -var "private_key_path=$SSH_KEY"'
+            }
           }
         }
       }
