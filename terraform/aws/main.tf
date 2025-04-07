@@ -16,7 +16,7 @@ provider "aws" {
 # SSH Key Pair
 resource "aws_key_pair" "thesis_key_pair" {
   key_name   = var.key_name
-  public_key = file("${path.module}/id_rsa.pub")
+  public_key = file("${path.module}/id_rsa_terraform.pub")
 }
 
 # Security Group
