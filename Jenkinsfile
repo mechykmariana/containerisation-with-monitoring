@@ -1,6 +1,14 @@
 pipeline {
   agent any
 
+  parameters {
+    booleanParam(
+      name: 'RECREATE_INFRA',
+      defaultValue: false,
+      description: 'Destroy and recreate infrastructure before apply'
+    )
+  }
+  
   environment {
     FRONTEND_IMAGE = "marianamechyk/react-frontend:latest"
     BACKEND_IMAGE  = "marianamechyk/django-backend:latest"

@@ -103,15 +103,8 @@ resource "aws_instance" "app_server" {
   associate_public_ip_address = true
 
   user_data = file("${path.module}/user_data.sh")
-
-  lifecycle {
-    create_before_destroy = false
-    replace_triggered_by = [
-      file("${path.module}/user_data.sh"),     # recreate EC2 if user data changes
-      aws_key_pair.thesis_key_pair.id          # recreate EC2 if key pair changes
-    ]
-  }
-
+  user_data_replace_on_change = true
+  
   provisioner "file" {
   source      = "${path.module}/../../docker-compose.yml"
   destination = "/home/ubuntu/app/docker-compose.yml"
