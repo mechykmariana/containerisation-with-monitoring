@@ -128,7 +128,7 @@ resource "aws_instance" "app_server" {
   connection {
   type        = "ssh"
   user        = "ubuntu"
-  private_key = file("${path.module}/id_rsa.pub")
+  private_key = file("${path.module}/id_rsa")
   host        = self.public_ip
   }
 }
