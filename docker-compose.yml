@@ -64,7 +64,7 @@ services:
 
   frontend:
     container_name: react-app
-    build: ./Containerisation-React-Django-App/ComputexFrontend
+    build: marianamechyk/react-frontend:latest
     ports:
       - "5173:5173"
     depends_on:
@@ -72,7 +72,7 @@ services:
   
   backend:
     container_name: django-bk
-    build: ./Containerisation-React-Django-App/Computex
+    build: marianamechyk/django-backend:latest
     ports:
       - "8000:8000"
     depends_on:
