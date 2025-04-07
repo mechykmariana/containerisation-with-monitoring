@@ -50,8 +50,12 @@ pipeline {
       steps {
         dir('terraform/aws') {
           withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
-            withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY')]) {
-          sh 'terraform destroy -auto-approve || true -var "private_key_path=$SSH_KEY"'
+            withCredentials([
+              string(credentialsId: 'ec2-pub-key', variable: 'PUB_KEY'),
+              sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY')
+            ]) {
+              writeFile file: 'id_rsa_terraform.pub', text: env.PUB_KEY
+              sh 'terraform destroy -auto-approve || true -var "private_key_path=$SSH_KEY"'
             }
           }
         }
@@ -73,14 +77,18 @@ pipeline {
       steps {
         dir('terraform/aws') {
           withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
-            withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY')]) {
-          sh 'terraform apply -auto-approve -var "private_key_path=$SSH_KEY"'
+            withCredentials([
+              string(credentialsId: 'ec2-pub-key', variable: 'PUB_KEY'),
+              sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY')
+            ]) {
+              writeFile file: 'id_rsa_terraform.pub', text: env.PUB_KEY
+              sh 'terraform apply -auto-approve -var "private_key_path=$SSH_KEY"'
             }
           }
         }
       }
     }
-  }
+  
 
   post {
     failure {
