@@ -49,7 +49,9 @@ pipeline {
       }
       steps {
         dir('terraform/aws') {
+          withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
           sh 'terraform destroy -auto-approve || true'
+          }
         }
       }
     }
@@ -68,7 +70,9 @@ pipeline {
     stage('Terraform Apply') {
       steps {
         dir('terraform/aws') {
+          withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
           sh 'terraform apply -auto-approve'
+          }
         }
       }
     }
