@@ -63,20 +63,23 @@ services:
       - '/:/host:ro,rslave'
 
   frontend:
-    container_name: react-app
-    build: marianamechyk/react-frontend:latest
+    image: marianamechyk/react-frontend:latest
     ports:
       - "5173:5173"
     depends_on:
       - backend
   
   backend:
-    container_name: django-bk
-    build: marianamechyk/django-backend:latest
+    image: marianamechyk/django-backend:latest
     ports:
       - "8000:8000"
     depends_on:
       - database
+    environment:
+      - DB_HOST=database
+      - DB_NAME=recipe
+      - DB_USER=admin
+      - DB_PASSWORD=12345
 
   database:
     image: postgres

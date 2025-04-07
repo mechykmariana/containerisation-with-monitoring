@@ -35,14 +35,32 @@ pipeline {
       }
     }
 
-    stage('Terraform Init & Apply') {
+    stage('Terraform Init & Plan') {
       steps {
         dir('terraform/aws') {
             withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
           sh 'terraform init'
           sh 'terraform plan'
-          sh 'terraform apply -auto-approve'
             }
+        }
+      }
+    }
+
+    stage('Terraform Destroy') {
+      when {
+        expression { return params.RECREATE_INFRA == true }
+      }
+      steps {
+        dir('terraform') {
+          sh 'terraform destroy -auto-approve || true'
+        }
+      }
+    }
+
+    stage('Terraform Apply') {
+      steps {
+        dir('terraform') {
+          sh 'terraform apply -auto-approve'
         }
       }
     }
