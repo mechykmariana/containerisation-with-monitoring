@@ -49,13 +49,13 @@ pipeline {
       }
       steps {
         dir('terraform/aws') {
-          withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
+          withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}") {
             withCredentials([
               string(credentialsId: 'ec2-pub-key', variable: 'PUB_KEY'),
               sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY')
             ]) {
               writeFile file: 'id_rsa_terraform.pub', text: env.PUB_KEY
-              sh 'terraform destroy -auto-approve || true -var "private_key_path=$SSH_KEY"'
+              sh 'terraform destroy -auto-approve -var "private_key_path=$SSH_KEY" || true'
             }
           }
         }
@@ -65,10 +65,13 @@ pipeline {
     stage('Terraform Init & Plan') {
       steps {
         dir('terraform/aws') {
-            withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
-          sh 'terraform init'
-          sh 'terraform plan'
+          withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}") {
+            withCredentials([string(credentialsId: 'ec2-pub-key', variable: 'PUB_KEY')]) {
+              writeFile file: 'id_rsa_terraform.pub', text: env.PUB_KEY
             }
+            sh 'terraform init'
+            sh 'terraform plan'
+          }
         }
       }
     }
@@ -76,7 +79,7 @@ pipeline {
     stage('Terraform Apply') {
       steps {
         dir('terraform/aws') {
-          withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
+          withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}") {
             withCredentials([
               string(credentialsId: 'ec2-pub-key', variable: 'PUB_KEY'),
               sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY')
@@ -88,7 +91,7 @@ pipeline {
         }
       }
     }
-  
+  }
 
   post {
     failure {
@@ -98,5 +101,4 @@ pipeline {
       echo 'Deployment successful!'
     }
   }
-}
 }
