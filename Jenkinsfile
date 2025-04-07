@@ -8,7 +8,7 @@ pipeline {
       description: 'Destroy and recreate infrastructure before apply'
     )
   }
-  
+
   environment {
     FRONTEND_IMAGE = "marianamechyk/react-frontend:latest"
     BACKEND_IMAGE  = "marianamechyk/django-backend:latest"
@@ -43,17 +43,6 @@ pipeline {
       }
     }
 
-    stage('Terraform Init & Plan') {
-      steps {
-        dir('terraform/aws') {
-            withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
-          sh 'terraform init'
-          sh 'terraform plan'
-            }
-        }
-      }
-    }
-
     stage('Terraform Destroy') {
       when {
         expression { return params.RECREATE_INFRA == true }
@@ -61,6 +50,17 @@ pipeline {
       steps {
         dir('terraform') {
           sh 'terraform destroy -auto-approve || true'
+        }
+      }
+    }
+
+    stage('Terraform Init & Plan') {
+      steps {
+        dir('terraform/aws') {
+            withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
+          sh 'terraform init'
+          sh 'terraform plan'
+            }
         }
       }
     }

@@ -104,7 +104,7 @@ resource "aws_instance" "app_server" {
 
   user_data = file("${path.module}/user_data.sh")
   user_data_replace_on_change = true
-  
+
   provisioner "file" {
   source      = "${path.module}/../../docker-compose.yml"
   destination = "/home/ubuntu/app/docker-compose.yml"
@@ -128,7 +128,7 @@ resource "aws_instance" "app_server" {
   connection {
   type        = "ssh"
   user        = "ubuntu"
-  private_key = file("${path.module}/id_rsa")
+  private_key = file("${path.module}/id_rsa.pub")
   host        = self.public_ip
   }
 }
