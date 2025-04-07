@@ -85,6 +85,11 @@ pipeline {
               sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY')
             ]) {
               writeFile file: 'id_rsa_terraform.pub', text: env.PUB_KEY
+              sh '''
+                echo "Private key path: $SSH_KEY"
+                ls -la $SSH_KEY
+                head -2 $SSH_KEY
+              '''
               sh 'terraform apply -auto-approve -var "private_key_path=$SSH_KEY"'
             }
           }
