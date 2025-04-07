@@ -38,9 +38,11 @@ pipeline {
     stage('Terraform Init & Apply') {
       steps {
         dir('terraform/aws') {
+            withAWS(credentials: 'aws-credentials', region: "${env.AWS_REGION}"){
           sh 'terraform init'
           sh 'terraform plan'
           sh 'terraform apply -auto-approve'
+            }
         }
       }
     }
