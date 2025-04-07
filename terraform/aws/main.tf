@@ -109,6 +109,7 @@ resource "aws_instance" "app_server" {
   inline = [
     "mkdir -p /home/ubuntu/app"
   ]
+  }
 
   provisioner "file" {
   source      = "${path.module}/../../docker-compose.yml"
