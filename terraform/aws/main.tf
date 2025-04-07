@@ -130,6 +130,6 @@ resource "aws_instance" "app_server" {
   user        = "ubuntu"
   private_key = file(var.private_key_path)
   host        = self.public_ip
-  timeout     = "2m"
+  timeout     = "5m"
   }
 }
