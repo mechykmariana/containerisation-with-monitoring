@@ -131,6 +131,5 @@ resource "aws_instance" "app_server" {
   private_key = file(var.private_key_path)
   host        = self.public_ip
   timeout     = "2m"
-  sleep_between_attempts = 10
   }
 }
