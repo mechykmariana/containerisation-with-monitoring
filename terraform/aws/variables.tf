@@ -25,4 +25,5 @@ variable "allowed_ssh_cidrs" {
 variable "private_key_path" {
   description = "Path to SSH private key for EC2 provisioners"
   type        = string
+  default     = "key_path"
 }
