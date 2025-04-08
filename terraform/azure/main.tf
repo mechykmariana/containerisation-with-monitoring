@@ -174,6 +174,10 @@ resource "azurerm_linux_virtual_machine" "main" {
   # Final step: run docker compose up
   provisioner "remote-exec" {
     inline = [
+      "while ! command -v docker &> /dev/null; do echo 'Waiting for Docker...'; sleep 5; done",
+      "sleep 10",
+      "sudo systemctl start docker",
+      "sudo docker --version", # verify it's available
       "cd /home/${var.admin_username}/app",
       "sudo docker compose up -d"
     ]
