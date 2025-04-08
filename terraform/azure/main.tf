@@ -110,7 +110,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "19_10-daily-gen2"
+    sku       = "24_04-lts-gen2"
     version   = "latest"
   }
 
