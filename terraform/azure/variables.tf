@@ -13,7 +13,7 @@ variable "admin_username" {
 variable "ssh_public_key" {
   description = "Path to your public SSH key"
   type        = string
-  default     = "key_path"
+  #default     = "key_path"
 }
 
 variable "vm_size" {
@@ -23,5 +23,5 @@ variable "vm_size" {
 variable "private_key_path" {
   description = "Path to the SSH private key used by provisioners"
   type        = string
-  default     = "key_path"
+  #default     = "key_path"
 }
