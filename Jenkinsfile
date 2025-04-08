@@ -263,9 +263,12 @@ pipeline {
               }
             } else if (params.CLOUD_PROVIDER == 'azure') {
               withCredentials([
-                file(credentialsId: 'azure-ssh-key', variable: 'SSH_KEY'),
-                file(credentialsId: 'azure-pub-key', variable: 'PUB_KEY'),
-                azureServicePrincipal(credentialsId: 'azure-credentials', subscriptionIdVariable: 'AZ_SUBSCRIPTION_ID', clientIdVariable: 'AZ_CLIENT_ID', clientSecretVariable: 'AZ_CLIENT_SECRET', tenantIdVariable: 'AZ_TENANT_ID')
+                sshUserPrivateKey(credentialsId: 'azure-ssh-key',
+                keyFileVariable: 'SSH_KEY_FILE',
+                passphraseVariable: 'SSH_PASSPHRASE',
+                usernameVariable: 'SSH_USERNAME'),
+                string(credentialsId: 'azure-pub-key', variable: 'PUB_KEY'),
+                azureServicePrincipal(credentialsId: 'azure-creds', subscriptionIdVariable: 'AZ_SUBSCRIPTION_ID', clientIdVariable: 'AZ_CLIENT_ID', clientSecretVariable: 'AZ_CLIENT_SECRET', tenantIdVariable: 'AZ_TENANT_ID')
               ]) {
                 writeFile file: 'id_rsa_azure.pub', text: readFile(env.PUB_KEY)
                 sh '''
