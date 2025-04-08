@@ -218,7 +218,7 @@ pipeline {
                   sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY')
                 ]) {
                   writeFile file: 'id_rsa_terraform.pub', text: env.PUB_KEY
-                  sh 'terraform destroy -auto-approve -var "private_key_path=$SSH_KEY"'
+                  sh 'terraform destroy -auto-approve -var "private_key_path=$SSH_KEY" || true'
                 }
               }
             } else if (params.CLOUD_PROVIDER == 'azure') {
@@ -236,7 +236,7 @@ pipeline {
                   export ARM_CLIENT_ID=$AZ_CLIENT_ID
                   export ARM_CLIENT_SECRET=$AZ_CLIENT_SECRET
                   export ARM_TENANT_ID=$AZ_TENANT_ID
-                  terraform destroy -auto-approve -var "ssh_public_key=id_rsa_azure.pub" -var "private_key_path=$SSH_KEY_FILE"
+                  terraform destroy -auto-approve -var "ssh_public_key=id_rsa_azure.pub" -var "private_key_path=$SSH_KEY_FILE || true"
                 '''
               }
             }
