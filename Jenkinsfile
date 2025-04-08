@@ -161,19 +161,19 @@ pipeline {
 
   stages {
 
-    stage('Clean Terraform State') {
-      when {
-        expression { return params.RECREATE_INFRA == true }
-      }
-      steps {
-        script {
-          def tfDir = "terraform/${params.CLOUD_PROVIDER}"
-          dir(tfDir) {
-            sh 'rm -rf .terraform terraform.tfstate terraform.tfstate.backup || true'
-          }
-        }
-      }
-    }
+    // stage('Clean Terraform State') {
+    //   when {
+    //     expression { return params.RECREATE_INFRA == true }
+    //   }
+    //   steps {
+    //     script {
+    //       def tfDir = "terraform/${params.CLOUD_PROVIDER}"
+    //       dir(tfDir) {
+    //         sh 'rm -rf .terraform terraform.tfstate terraform.tfstate.backup || true'
+    //       }
+    //     }
+    //   }
+    // }
 
     stage('Build Frontend Image') {
       steps {
