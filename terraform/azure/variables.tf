@@ -7,7 +7,7 @@ variable "location" {
 }
 
 variable "admin_username" {
-  default = "azureuser"
+  default = "marianamechyk"
 }
 
 variable "ssh_public_key" {
