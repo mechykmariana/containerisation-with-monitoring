@@ -119,5 +119,5 @@ resource "azurerm_linux_virtual_machine" "main" {
     name                 = "osdisk"
   }
 
-  custom_data = file("${path.module}/user_data.sh")
+  custom_data = filebase64("${path.module}/user_data.sh")
 }
