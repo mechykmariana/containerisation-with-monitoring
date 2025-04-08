@@ -264,14 +264,14 @@ pipeline {
                 file(credentialsId: 'azure-pub-key', variable: 'PUB_KEY'),
                 azureServicePrincipal(credentialsId: 'azure-credentials', subscriptionIdVariable: 'AZ_SUBSCRIPTION_ID', clientIdVariable: 'AZ_CLIENT_ID', clientSecretVariable: 'AZ_CLIENT_SECRET', tenantIdVariable: 'AZ_TENANT_ID')
               ]) {
-                writeFile file: 'id_rsa_terraform.pub', text: readFile(env.PUB_KEY)
+                writeFile file: 'id_rsa_azure.pub', text: readFile(env.PUB_KEY)
                 sh '''
                   export ARM_SUBSCRIPTION_ID=$AZ_SUBSCRIPTION_ID
                   export ARM_CLIENT_ID=$AZ_CLIENT_ID
                   export ARM_CLIENT_SECRET=$AZ_CLIENT_SECRET
                   export ARM_TENANT_ID=$AZ_TENANT_ID
                   terraform init
-                  terraform apply -auto-approve -var "ssh_public_key=id_rsa_terraform.pub" -var "private_key_path=$SSH_KEY"
+                  terraform apply -auto-approve -var "ssh_public_key=id_rsa_azure.pub" -var "private_key_path=$SSH_KEY"
                 '''
               }
             }
