@@ -19,3 +19,9 @@ variable "ssh_public_key" {
 variable "vm_size" {
   default = "Standard_B2s"
 }
+
+variable "private_key_path" {
+  description = "Path to the SSH private key used by provisioners"
+  type        = string
+  default     = "key_path"
+}
