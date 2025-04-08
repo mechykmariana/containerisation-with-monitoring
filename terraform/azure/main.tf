@@ -179,7 +179,7 @@ resource "azurerm_linux_virtual_machine" "main" {
       "sudo systemctl start docker",
       "sudo docker --version", # verify it's available
       "cd /home/${var.admin_username}/app",
-      "sudo docker compose up -d"
+      "sudo docker-compose up -d"
     ]
     connection {
       type        = "ssh"
