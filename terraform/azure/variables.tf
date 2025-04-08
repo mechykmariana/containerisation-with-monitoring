@@ -3,7 +3,7 @@ variable "resource_group_name" {
 }
 
 variable "location" {
-  default = "Notrh Europe"
+  default = "North Europe"
 }
 
 variable "admin_username" {
