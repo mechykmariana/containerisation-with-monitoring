@@ -227,7 +227,7 @@ pipeline {
                 keyFileVariable: 'SSH_KEY_FILE',
                 passphraseVariable: 'SSH_PASSPHRASE',
                 usernameVariable: 'SSH_USERNAME'),
-                file(credentialsId: 'azure-pub-key', variable: 'PUB_KEY'),
+                string(credentialsId: 'azure-pub-key', variable: 'PUB_KEY'),
                 azureServicePrincipal(credentialsId: 'azure-creds', subscriptionIdVariable: 'AZ_SUBSCRIPTION_ID', clientIdVariable: 'AZ_CLIENT_ID', clientSecretVariable: 'AZ_CLIENT_SECRET', tenantIdVariable: 'AZ_TENANT_ID')
               ]) {
                 writeFile file: 'id_rsa_azure.pub', text: readFile(env.PUB_KEY)
