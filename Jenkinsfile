@@ -277,7 +277,7 @@ pipeline {
                   export ARM_CLIENT_SECRET=$AZ_CLIENT_SECRET
                   export ARM_TENANT_ID=$AZ_TENANT_ID
                   terraform init
-                  terraform apply -auto-approve -var "ssh_public_key=id_rsa_azure.pub" -var "private_key_path=$SSH_KEY"
+                  terraform apply -auto-approve -var "ssh_public_key=id_rsa_azure.pub" -var "private_key_path=$SSH_KEY_FILE"
                 '''
               }
             }
