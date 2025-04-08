@@ -223,8 +223,11 @@ pipeline {
               }
             } else if (params.CLOUD_PROVIDER == 'azure') {
               withCredentials([
-                sshUserPrivateKey(credentialsId: 'azure-ssh-key', variable: 'SSH_KEY'),
-                string(credentialsId: 'azure-pub-key', variable: 'PUB_KEY'),
+                sshUserPrivateKey(credentialsId: 'azure-ssh-key',
+                keyFileVariable: 'SSH_KEY_FILE',
+                passphraseVariable: 'SSH_PASSPHRASE',
+                usernameVariable: 'SSH_USERNAME'),
+                file(credentialsId: 'azure-pub-key', variable: 'PUB_KEY'),
                 azureServicePrincipal(credentialsId: 'azure-creds', subscriptionIdVariable: 'AZ_SUBSCRIPTION_ID', clientIdVariable: 'AZ_CLIENT_ID', clientSecretVariable: 'AZ_CLIENT_SECRET', tenantIdVariable: 'AZ_TENANT_ID')
               ]) {
                 writeFile file: 'id_rsa_azure.pub', text: readFile(env.PUB_KEY)
@@ -233,7 +236,7 @@ pipeline {
                   export ARM_CLIENT_ID=$AZ_CLIENT_ID
                   export ARM_CLIENT_SECRET=$AZ_CLIENT_SECRET
                   export ARM_TENANT_ID=$AZ_TENANT_ID
-                  terraform destroy -auto-approve -var "ssh_public_key=id_rsa_azure.pub" -var "private_key_path=$SSH_KEY"
+                  terraform destroy -auto-approve -var "ssh_public_key=id_rsa_azure.pub" -var "private_key_path=$SSH_KEY_FILE"
                 '''
               }
             }
