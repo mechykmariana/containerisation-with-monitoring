@@ -121,4 +121,67 @@ resource "azurerm_linux_virtual_machine" "main" {
   }
 
   custom_data = filebase64("${path.module}/user_data.sh")
+
+   # Create app directory first
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -p /home/${var.admin_username}/app"
+    ]
+    connection {
+      type        = "ssh"
+      user        = var.admin_username
+      private_key = file(var.private_key_path)
+      host        = azurerm_public_ip.main.ip_address
+    }
+  }
+
+  # Upload docker-compose.yml
+  provisioner "file" {
+    source      = "${path.module}/../../docker-compose.yml"
+    destination = "/home/${var.admin_username}/app/docker-compose.yml"
+    connection {
+      type        = "ssh"
+      user        = var.admin_username
+      private_key = file(var.private_key_path)
+      host        = azurerm_public_ip.main.ip_address
+    }
+  }
+
+  # Upload alertmanager directory
+  provisioner "file" {
+    source      = "${path.module}/../../alertmanager"
+    destination = "/home/${var.admin_username}/app/alertmanager/"
+    connection {
+      type        = "ssh"
+      user        = var.admin_username
+      private_key = file(var.private_key_path)
+      host        = azurerm_public_ip.main.ip_address
+    }
+  }
+
+  # Upload prometheus directory
+  provisioner "file" {
+    source      = "${path.module}/../../prometheus"
+    destination = "/home/${var.admin_username}/app/prometheus/"
+    connection {
+      type        = "ssh"
+      user        = var.admin_username
+      private_key = file(var.private_key_path)
+      host        = azurerm_public_ip.main.ip_address
+    }
+  }
+
+  # Final step: run docker compose up
+  provisioner "remote-exec" {
+    inline = [
+      "cd /home/${var.admin_username}/app",
+      "sudo docker compose up -d"
+    ]
+    connection {
+      type        = "ssh"
+      user        = var.admin_username
+      private_key = file(var.private_key_path)
+      host        = azurerm_public_ip.main.ip_address
+    }
+  }
 }
