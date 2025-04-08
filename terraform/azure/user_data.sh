@@ -5,5 +5,5 @@ apt update -y
 apt install -y docker.io docker-compose
 systemctl start docker
 systemctl enable docker
-cd /home/azureuser/app
+cd /home/marianamechyk/app
 docker-compose up -d
