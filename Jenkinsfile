@@ -230,7 +230,7 @@ pipeline {
                 string(credentialsId: 'azure-pub-key', variable: 'PUB_KEY'),
                 azureServicePrincipal(credentialsId: 'azure-creds', subscriptionIdVariable: 'AZ_SUBSCRIPTION_ID', clientIdVariable: 'AZ_CLIENT_ID', clientSecretVariable: 'AZ_CLIENT_SECRET', tenantIdVariable: 'AZ_TENANT_ID')
               ]) {
-                writeFile file: 'id_rsa_azure.pub', text: PUB_KEYs
+                writeFile file: 'id_rsa_azure.pub', text: PUB_KEY
                 sh '''
                   export ARM_SUBSCRIPTION_ID=$AZ_SUBSCRIPTION_ID
                   export ARM_CLIENT_ID=$AZ_CLIENT_ID
