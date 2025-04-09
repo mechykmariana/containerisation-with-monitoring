@@ -178,6 +178,8 @@ resource "azurerm_linux_virtual_machine" "main" {
       "sleep 10",
       "sudo systemctl start docker",
       "sudo docker --version", # verify it's available
+      "sudo docker stop $(sudo docker ps -aq) || true",
+      "sudo docker rm $(sudo docker ps -aq) || true",
       "cd /home/${var.admin_username}/app",
       "sudo docker-compose up -d"
     ]
