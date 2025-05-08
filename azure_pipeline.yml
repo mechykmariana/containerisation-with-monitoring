@@ -46,9 +46,9 @@ steps:
     tags: '$(TAG)'
 
 # Step 2: Deploy to Azure Web App for Containers
-- task: AzureWebAppContainer@2
-  displayName: 'Deploy to Azure Web App for Containers'
-  inputs:
-    azureSubscription: '<your-service-connection>'  # Name of the Azure service connection
-    appName: '<your-webapp-name>'  # Name of your Azure Web App
-    imageName: '$(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(IMAGE_TAG)'
+# - task: AzureWebAppContainer@2
+#   displayName: 'Deploy to Azure Web App for Containers'
+#   inputs:
+#     azureSubscription: '<your-service-connection>'  # Name of the Azure service connection
+#     appName: '<your-webapp-name>'  # Name of your Azure Web App
+#     imageName: '$(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(IMAGE_TAG)'
