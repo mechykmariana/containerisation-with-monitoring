@@ -75,7 +75,7 @@ jobs:
     dependsOn: BuildAndPush
     steps:
       # Install Terraform
-      - task: TerraformInstaller@2
+      - task: TerraformInstaller@1
         inputs:
           terraformVersion: '1.x'
         
