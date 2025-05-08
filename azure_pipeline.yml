@@ -46,30 +46,29 @@ jobs:
           Dockerfile: '$(Build.SourcesDirectory)/ComputexFrontend/Dockerfile' 
           tags: '$(TAG)'
 
-  - job: Deployment
-    displayName: 'Deploy the images to Azure'
+  - job: DeployBackend
+    displayName: 'Deploy backend image to Azure Web App'
     dependsOn: BuildAndPush
-    jobs:
-      - job: DeployBackend
-        displayName: 'Deploy backend'
-        steps:
-          # Deploy to Azure Web App for Containers
-          - task: AzureWebAppContainer@2
-            displayName: 'Deploy to Azure Web App for Containers'
-            inputs:
-              azureSubscription: 'pure-azure-service-connection'
-              appName: 'backend-web-app'
-              imageName: '$(DOCKER_USERNAME)/$(BACKEND_IMAGE_NAME):$(TAG)'
+    steps:
+      # Deploy the backend to Azure Web App for Containers
+      - task: AzureWebAppContainer@2
+        displayName: 'Deploy to Azure Web App for Containers'
+        inputs:
+          azureSubscription: 'pure-azure-service-connection'
+          appName: 'backend-web-app'
+          imageName: '$(DOCKER_USERNAME)/$(BACKEND_IMAGE_NAME):$(TAG)'
 
-      - job: DeployFrontend
-        displayName: 'Deploy frontend'
-        steps:
-          - task: AzureWebAppContainer@2
-            displayName: 'Deploy to Azure Web App for Containers'
-            inputs:
-              azureSubscription: 'pure-azure-service-connection'
-              appName: 'frontend-web-app'
-              imageName: '$(DOCKER_USERNAME)/$(FRONTEND_IMAGE_NAME):$(TAG)'
+  - job: DeployFrontend
+    displayName: 'Deploy frontend image to Azure Web App'
+    dependsOn: BuildAndPush
+    steps:
+      # Deploy the frontend to Azure Web App for Containers
+      - task: AzureWebAppContainer@2
+        displayName: 'Deploy to Azure Web App for Containers'
+        inputs:
+          azureSubscription: 'pure-azure-service-connection'
+          appName: 'frontend-web-app'
+          imageName: '$(DOCKER_USERNAME)/$(FRONTEND_IMAGE_NAME):$(TAG)'
 
   - job: Terraform
     displayName: 'Run Terraform configurations'
