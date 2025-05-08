@@ -4,9 +4,10 @@ trigger:
       - main  # Trigger the pipeline when changes are made to main 
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-latest' # lates ubuntu image to run the pipeline
 
 variables:
+# Variables are defined in the Azure DevOps
   DOCKER_USERNAME: $(dockerUsername)
   DOCKER_PASSWORD: $(dockerPassword)
   BACKEND_IMAGE_NAME: 'django-backend'
@@ -22,6 +23,7 @@ jobs:
         displayName: 'Login to docker hub'
         inputs:
           command: 'login'
+          # Service connection in the Azure DevOps for the Docker authorization connection (type: Docker Registry)
           containerRegistry: 'docker-service-connection'
           username: '$(DOCKER_USERNAME)'
           password: '$(DOCKER_PASSWORD)'
@@ -30,6 +32,7 @@ jobs:
       - task: Docker@2
         displayName: 'Build and push the backend image'
         inputs:
+        # Service connection in the Azure DevOps for the Docker authorization connection (type: Docker Registry)
           containerRegistry: 'docker-service-connection'
           repository: '$(DOCKER_USERNAME)/$(BACKEND_IMAGE_NAME)'
           command: 'buildAndPush'
@@ -40,6 +43,7 @@ jobs:
       - task: Docker@2
         displayName: 'Build and push the frontend image'
         inputs:
+          # Service connection in the Azure DevOps for the Docker authorization connection (type: Docker Registry)
           containerRegistry: 'docker-service-connection'
           repository: '$(DOCKER_USERNAME)/$(FRONTEND_IMAGE_NAME)'
           command: 'buildAndPush'
@@ -48,31 +52,33 @@ jobs:
 
   - job: DeployBackend
     displayName: 'Deploy backend image to Azure Web App'
-    dependsOn: BuildAndPush
+    dependsOn: BuildAndPush # Ensure that the job is running after the job BuildAndPush
     steps:
-      # Deploy the backend to Azure Web App for Containers
+      # Deploy the backend to Azure Web App to use docker imaged in the Azure environment
       - task: AzureWebAppContainer@1
         displayName: 'Deploy to Azure Web App for Containers'
         inputs:
+          # Service connection in the Azure DevOps to manage Azure resources (type: Azure Resource Manager)
           azureSubscription: 'pure-azure-service-connection'
           appName: 'backend-web-app'
           imageName: '$(DOCKER_USERNAME)/$(BACKEND_IMAGE_NAME):$(TAG)'
 
   - job: DeployFrontend
     displayName: 'Deploy frontend image to Azure Web App'
-    dependsOn: BuildAndPush
+    dependsOn: BuildAndPush # Ensure that the job is running after the job BuildAndPush
     steps:
-      # Deploy the frontend to Azure Web App for Containers
+      # Deploy the frontend to Azure Web App to use docker imaged in the Azure environment
       - task: AzureWebAppContainer@1
         displayName: 'Deploy to Azure Web App for Containers'
         inputs:
+        # Service connection in the Azure DevOps to manage Azure resources (type: Azure Resource Manager)
           azureSubscription: 'pure-azure-service-connection'
           appName: 'frontend-web-app'
           imageName: '$(DOCKER_USERNAME)/$(FRONTEND_IMAGE_NAME):$(TAG)'
 
   - job: Terraform
     displayName: 'Run Terraform configurations'
-    dependsOn: BuildAndPush
+    dependsOn: BuildAndPush # Ensure that the job is running after the job BuildAndPush
     steps:
       # Install Terraform
       - task: TerraformInstaller@1
@@ -81,8 +87,8 @@ jobs:
         
       # Run Terraform configurations
       - script: |
-          cd $(Build.SourcesDirectory)/terraform/azure
+          cd $(Build.SourcesDirectory)/terraform/azure # Navigate to the folder with terraform configuration for Azure
           terraform init
           terraform plan
-          terraform apply -auto-approve
+          terraform apply -auto-approve # Apply changes automatically without the confirmation
         displayName: 'Run Terraform'
