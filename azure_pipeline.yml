@@ -51,7 +51,7 @@ jobs:
     dependsOn: BuildAndPush
     steps:
       # Deploy the backend to Azure Web App for Containers
-      - task: AzureWebAppContainer@2
+      - task: AzureWebAppContainer@1
         displayName: 'Deploy to Azure Web App for Containers'
         inputs:
           azureSubscription: 'pure-azure-service-connection'
@@ -63,7 +63,7 @@ jobs:
     dependsOn: BuildAndPush
     steps:
       # Deploy the frontend to Azure Web App for Containers
-      - task: AzureWebAppContainer@2
+      - task: AzureWebAppContainer@1
         displayName: 'Deploy to Azure Web App for Containers'
         inputs:
           azureSubscription: 'pure-azure-service-connection'
@@ -75,7 +75,7 @@ jobs:
     dependsOn: BuildAndPush
     steps:
       # Install Terraform
-      - task: TerraformInstaller@1
+      - task: TerraformInstaller@2
         inputs:
           terraformVersion: '1.x'
         
