@@ -7,48 +7,83 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-# defined in Azure DevOps variables
-  variables:
   DOCKER_USERNAME: $(dockerUsername)
   DOCKER_PASSWORD: $(dockerPassword)
   BACKEND_IMAGE_NAME: 'django-backend'
   FRONTEND_IMAGE_NAME: 'react-frontend'
   TAG: 'latest'
 
-steps:
-# Login to Docker Hub
-- task: Docker@2
-  displayName: 'Login to docker hub'
-  inputs:
-    command: 'login'
-    containerRegistry: 'docker-service-connection'
-    username: '$(DOCKER_USERNAME)'
-    password: '$(DOCKER_PASSWORD)'
+jobs:
+  - job: BuildAndPush
+    displayName: 'Build and push docker images'
+    steps:
+      # Login to Docker Hub
+      - task: Docker@2
+        displayName: 'Login to docker hub'
+        inputs:
+          command: 'login'
+          containerRegistry: 'docker-service-connection'
+          username: '$(DOCKER_USERNAME)'
+          password: '$(DOCKER_PASSWORD)'
 
-# Build and push the backend image
-- task: Docker@2
-  displayName: 'Build and push the backend image'
-  inputs:
-    containerRegistry: 'docker-service-connection'
-    repository: '$(DOCKER_USERNAME)/$(BACKEND_IMAGE_NAME)'
-    command: 'buildAndPush'
-    Dockerfile: '$(Build.SourcesDirectory)/Computex/Dockerfile' 
-    tags: '$(TAG)'
+      # Build and push the backend image
+      - task: Docker@2
+        displayName: 'Build and push the backend image'
+        inputs:
+          containerRegistry: 'docker-service-connection'
+          repository: '$(DOCKER_USERNAME)/$(BACKEND_IMAGE_NAME)'
+          command: 'buildAndPush'
+          Dockerfile: '$(Build.SourcesDirectory)/Computex/Dockerfile' 
+          tags: '$(TAG)'
 
-# Build and push the frontend image
-- task: Docker@2
-  displayName: 'Build and push the frontend image'
-  inputs:
-    containerRegistry: 'docker-service-connection'
-    repository: '$(DOCKER_USERNAME)/$(FRONTEND_IMAGE_NAME)'
-    command: 'buildAndPush'
-    Dockerfile: '$(Build.SourcesDirectory)/ComputexFrontend/Dockerfile' 
-    tags: '$(TAG)'
+      # Build and push the frontend image
+      - task: Docker@2
+        displayName: 'Build and push the frontend image'
+        inputs:
+          containerRegistry: 'docker-service-connection'
+          repository: '$(DOCKER_USERNAME)/$(FRONTEND_IMAGE_NAME)'
+          command: 'buildAndPush'
+          Dockerfile: '$(Build.SourcesDirectory)/ComputexFrontend/Dockerfile' 
+          tags: '$(TAG)'
 
-# Step 2: Deploy to Azure Web App for Containers
-# - task: AzureWebAppContainer@2
-#   displayName: 'Deploy to Azure Web App for Containers'
-#   inputs:
-#     azureSubscription: '<your-service-connection>'  # Name of the Azure service connection
-#     appName: '<your-webapp-name>'  # Name of your Azure Web App
-#     imageName: '$(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(IMAGE_TAG)'
+  - job: Deployment
+    displayName: 'Deploy the images to Azure'
+    dependsOn: BuildAndPush
+    jobs:
+      - job: DeployBackend
+        displayName: 'Deploy backend'
+        steps:
+          # Deploy to Azure Web App for Containers
+          - task: AzureWebAppContainer@2
+            displayName: 'Deploy to Azure Web App for Containers'
+            inputs:
+              azureSubscription: 'pure-azure-service-connection'
+              appName: 'backend-web-app'
+              imageName: '$(DOCKER_USERNAME)/$(BACKEND_IMAGE_NAME):$(TAG)'
+
+      - job: DeployFrontend
+        displayName: 'Deploy frontend'
+        steps:
+          - task: AzureWebAppContainer@2
+            displayName: 'Deploy to Azure Web App for Containers'
+            inputs:
+              azureSubscription: 'pure-azure-service-connection'
+              appName: 'frontend-web-app'
+              imageName: '$(DOCKER_USERNAME)/$(FRONTEND_IMAGE_NAME):$(TAG)'
+
+  - job: Terraform
+    displayName: 'Run Terraform configurations'
+    dependsOn: BuildAndPush
+    steps:
+      # Install Terraform
+      - task: TerraformInstaller@1
+        inputs:
+          terraformVersion: '1.x'
+        
+      # Run Terraform configurations
+      - script: |
+          cd $(Build.SourcesDirectory)/terraform/azure
+          terraform init
+          terraform plan
+          terraform apply -auto-approve
+        displayName: 'Run Terraform'
