@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region eu-north-1)
+  pre_build:
+    commands:
+      - echo Building Docker image for backend...
+      - docker build -t $dockerUsername/django-backend:latest -f Computex/Dockerfile .
+      - echo Building Docker image for frontend...
+      - docker build -t $dockerUsername/react-frontend:latest -f ComputexFrontend/Dockerfile .
+  build:
+    commands:
+      - echo Tagging backend image for ECR...
+      - docker tag $dockerUsername/django-backend:latest 339970874091.dkr.ecr.eu-north-1.amazonaws.com/django-backend:latest
+      - echo Tagging frontend image for ECR...
+      - docker tag $dockerUsername/react-frontend:latest 339970874091.dkr.ecr.eu-north-1.amazonaws.com/react-frontend:latest
+  post_build:
+    commands:
+      - echo Pushing backend image to ECR...
+      - docker push 339970874091.dkr.ecr.eu-north-1.amazonaws.com/django-backend:latest
+      - echo Pushing frontend image to ECR...
+      - docker push 339970874091.dkr.ecr.eu-north-1.amazonaws.com/react-frontend:latest
+      - echo Docker images pushed to ECR.
+
+artifacts:
+  files:
+    - '**/*'
