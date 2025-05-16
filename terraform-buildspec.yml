@@ -12,6 +12,8 @@ phases:
   build:
     commands:
       - echo "Running Terraform in terraform/aws"
+      - aws ssm get-parameter --name "private_key" --with-decryption --region eu-north-1 --query "Parameter.Value" --output text > terraform/aws/key_path
+      - chmod 600 terraform/aws/key_path
       - cd terraform/aws
       - terraform init
       - terraform apply -auto-approve
