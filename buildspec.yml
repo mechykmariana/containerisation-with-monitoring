@@ -9,9 +9,9 @@ phases:
   pre_build:
     commands:
       - echo Building Docker image for backend...
-      - docker build -t $dockerUsername/django-backend:latest -f Computex/Dockerfile .
+      - docker build -t $dockerUsername/django-backend:latest -f Computex/Dockerfile Computex
       - echo Building Docker image for frontend...
-      - docker build -t $dockerUsername/react-frontend:latest -f ComputexFrontend/Dockerfile .
+      - docker build -t $dockerUsername/react-frontend:latest -f ComputexFrontend/Dockerfile ComputexFrontend
   build:
     commands:
       - echo Tagging backend image for ECR...
