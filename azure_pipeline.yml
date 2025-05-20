@@ -74,12 +74,21 @@ stages:
           - script: env | grep AZURE
             displayName: 'Print Azure environment variables'
 
+          - script: |
+              echo "ARM_SUBSCRIPTION_ID: $ARM_SUBSCRIPTION_ID"
+              echo "ARM_CLIENT_ID: $ARM_CLIENT_ID"
+              echo "ARM_TENANT_ID: $ARM_TENANT_ID"
+              echo "ARM_CLIENT_SECRET: $ARM_CLIENT_SECRET"
+              echo "SYSTEM_ACCESSTOKEN: $SYSTEM_ACCESSTOKEN"
+            displayName: 'Debug Azure Environment Variables'
+
+
           - task: TerraformCLI@2
             displayName: 'Terraform Init'
             inputs:
               provider: 'azurerm'
               command: 'init'
-              environmentServiceNameAzureRM: 'service-connection'
+              environmentServiceNameAzureRM: 'pure-azure-service-connection'
               workingDirectory: 'terraform/azure'
 
           - task: TerraformCLI@2
@@ -87,7 +96,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              environmentServiceNameAzureRM: 'service-connection'
+              environmentServiceNameAzureRM: 'pure-azure-service-connection'
               workingDirectory: 'terraform/azure'
               commandOptions: '-auto-approve'
 
