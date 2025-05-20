@@ -72,20 +72,20 @@ stages:
           #     terraform apply -auto-approve
           #   displayName: 'Terraform Init & Apply'
 
-          - task: TerraformCLI@1
+          - task: TerraformCLI@2
             displayName: 'Terraform Init'
             inputs:
               provider: 'azurerm'
               command: 'init'
-              environmentServiceNameAzureRM: 'pure-azure-service-connection'
+              environmentServiceNameAzureRM: 'service-connection'
               workingDirectory: 'terraform/azure'
 
-          - task: TerraformCLI@1
+          - task: TerraformCLI@2
             displayName: 'Terraform Apply'
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              environmentServiceNameAzureRM: 'pure-azure-service-connection'
+              environmentServiceNameAzureRM: 'service-connection'
               workingDirectory: 'terraform/azure'
               commandOptions: '-auto-approve'
 
