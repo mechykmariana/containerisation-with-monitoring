@@ -66,9 +66,18 @@ stages:
               chmod 600 terraform/azure/key_path
             displayName: 'Write SSH Private Key for Terraform'
 
-          - script: |
-              cd terraform/azure
-              terraform init
-              terraform apply -auto-approve
-            displayName: 'Terraform Init & Apply'
+          # - script: |
+          #     cd terraform/azure
+          #     terraform init
+          #     terraform apply -auto-approve
+          #   displayName: 'Terraform Init & Apply'
 
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init & Apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              environmentServiceNameAzureRM: 'pure-azure-service-connection'
+              workingDirectory: 'terraform/azure'
+              commandOprions: '-auto-approve'
+              
