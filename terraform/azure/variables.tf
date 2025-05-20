@@ -10,6 +10,10 @@ variable "admin_username" {
   default = "marianamechyk"
 }
 
+variable "client_secret" {
+  default = "DUN8Q~A.GFXwlgwLQC3h8G.CUAnzaSYzt.AcYdnI"
+}
+
 # variable "ssh_public_key" {
 #   description = "Path to your public SSH key"
 #   type        = string
