@@ -10,11 +10,11 @@ variable "admin_username" {
   default = "marianamechyk"
 }
 
-variable "ssh_public_key" {
-  description = "Path to your public SSH key"
-  type        = string
-  #default     = "key_path"
-}
+# variable "ssh_public_key" {
+#   description = "Path to your public SSH key"
+#   type        = string
+#   #default     = "key_path"
+# }
 
 variable "vm_size" {
   default = "Standard_B2s"
