@@ -23,5 +23,5 @@ variable "vm_size" {
 variable "private_key_path" {
   description = "Path to the SSH private key used by provisioners"
   type        = string
-  #default     = "key_path"
+  default     = "key_path"
 }

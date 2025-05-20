@@ -62,6 +62,11 @@ stages:
               terraformVersion: '1.12.0'
           # Terraform Init & Apply
           - script: |
+              echo "$(PRIVATE_KEY)" > terraform/azure/key_path
+              chmod 600 terraform/azure/key_path
+            displayName: 'Write SSH Private Key for Terraform'
+
+          - script: |
               cd terraform/azure
               terraform init
               terraform apply -auto-approve
