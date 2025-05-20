@@ -79,7 +79,6 @@ stages:
               command: 'init'
               environmentServiceNameAzureRM: 'pure-azure-service-connection'
               workingDirectory: 'terraform/azure'
-              commandOprions: '-auto-approve'
 
           - task: TerraformCLI@1
             displayName: 'Terraform Apply'
@@ -88,5 +87,5 @@ stages:
               command: 'apply'
               environmentServiceNameAzureRM: 'pure-azure-service-connection'
               workingDirectory: 'terraform/azure'
-              commandOprions: '-auto-approve'
+              commandOptions: '-auto-approve'
               
