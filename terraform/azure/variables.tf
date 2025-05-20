@@ -11,7 +11,7 @@ variable "admin_username" {
 }
 
 variable "client_secret" {
-  default = "DUN8Q~A.GFXwlgwLQC3h8G.CUAnzaSYzt.AcYdnI"
+  default = "Jn98Q~_hD2I04Wr3-Hg8jUekEHhgNIy_aXTfdb48"
 }
 
 # variable "ssh_public_key" {
