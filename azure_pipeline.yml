@@ -59,7 +59,7 @@ stages:
           - task: TerraformInstaller@1
             displayName: 'Install Terraform'
             inputs:
-              terraformVersion: '1.6.x'
+              terraformVersion: '1.12.0'
           # Terraform Init & Apply
           - script: |
               cd terraform/azure
