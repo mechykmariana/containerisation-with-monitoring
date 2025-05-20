@@ -72,7 +72,7 @@ stages:
           #     terraform apply -auto-approve
           #   displayName: 'Terraform Init & Apply'
 
-          - task: TerraformTaskV4@4
+          - task: TerraformCLI@1
             displayName: 'Terraform Init & Apply'
             inputs:
               provider: 'azurerm'
