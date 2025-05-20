@@ -10,9 +10,9 @@ variable "admin_username" {
   default = "marianamechyk"
 }
 
-variable "client_secret" {
-  default = "Jn98Q~_hD2I04Wr3-Hg8jUekEHhgNIy_aXTfdb48"
-}
+# variable "client_secret" {
+#   default = "Jn98Q~_hD2I04Wr3-Hg8jUekEHhgNIy_aXTfdb48"
+# }
 
 # variable "ssh_public_key" {
 #   description = "Path to your public SSH key"
