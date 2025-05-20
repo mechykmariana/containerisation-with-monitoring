@@ -88,4 +88,7 @@ stages:
               environmentServiceNameAzureRM: 'pure-azure-service-connection'
               workingDirectory: 'terraform/azure'
               commandOptions: '-auto-approve'
+
+          - script: env | grep AZURE
+            displayName: 'Print Azure environment variables'
               
