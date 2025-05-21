@@ -103,6 +103,11 @@ stages:
               workingDirectory: 'terraform/azure'
               inlineScript: |
                 terraform apply -auto-approve
+            env:
+              ARM_SUBSCRIPTION_ID: '34b0240f-6b54-4633-b502-1bba02c8d5b2'
+              ARM_TENANT_ID: '77eb4081-9e67-4aa5-9e95-acdc391d5849'
+              ARM_CLIENT_ID: '89cf2018-f9e4-4afd-8e2a-cd67407d6c3b'
+              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
 
           
               
