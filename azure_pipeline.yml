@@ -60,13 +60,18 @@ stages:
             displayName: 'Install Terraform'
             inputs:
               terraformVersion: '1.12.0'
+
+          - task: DownloadSecureFile@1
+            name: downloadSSHKey
+            displayName: 'Download SSH Private Key'
+            inputs:
+              secureFile: 'key_path'
+
           # Terraform Init & Apply
           - script: |
-              echo "$(PRIVATE_KEY)" > terraform/azure/key_path
+              cp "$(downloadSSHKey.secureFilePath)" terraform/azure/key_path
               chmod 600 terraform/azure/key_path
-            displayName: 'Write SSH Private Key for Terraform'
-            env:
-              PRIVATE_KEY: $(PRIVATE_KEY)
+            displayName: 'Copy SSH Private Key to Terraform Directory'
 
           # - script: |
           #     cd terraform/azure
