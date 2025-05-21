@@ -65,6 +65,8 @@ stages:
               echo "$(PRIVATE_KEY)" > terraform/azure/key_path
               chmod 600 terraform/azure/key_path
             displayName: 'Write SSH Private Key for Terraform'
+            env:
+              PRIVATE_KEY: $(PRIVATE_KEY)
 
           # - script: |
           #     cd terraform/azure
@@ -82,28 +84,10 @@ stages:
               echo "SYSTEM_ACCESSTOKEN: $SYSTEM_ACCESSTOKEN"
             displayName: 'Debug Azure Environment Variables'
 
-
-          # - task: TerraformCLI@2
-          #   displayName: 'Terraform Init'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'init'
-          #     environmentServiceNameAzureRM: 'terraform-connection'
-          #     workingDirectory: 'terraform/azure'
-
-          # - task: TerraformCLI@2
-          #   displayName: 'Terraform Apply'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'apply'
-          #     environmentServiceNameAzureRM: 'terraform-connection'
-          #     workingDirectory: 'terraform/azure'
-          #     commandOptions: '-auto-approve'
-
           - task: AzureCLI@2
             displayName: 'Terraform Init'
             inputs:
-              azureSubscription: 'terraform-connection'
+              azureSubscription: 'pure-azure-service-connection'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               workingDirectory: 'terraform/azure'
@@ -113,15 +97,11 @@ stages:
           - task: AzureCLI@2
             displayName: 'Terraform Apply'
             inputs:
-              azureSubscription: 'terraform-connection'
+              azureSubscription: 'pure-azure-service-connection'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               workingDirectory: 'terraform/azure'
               inlineScript: |
-                export ARM_SUBSCRIPTION_ID="34b0240f-6b54-4633-b502-1bba02c8d5b2"
-                export ARM_TENANT_ID="77eb4081-9e67-4aa5-9e95-acdc391d5849"
-                export ARM_CLIENT_ID="89cf2018-f9e4-4afd-8e2a-cd67407d6c3b"
-                export ARM_CLIENT_SECRET="$(ARM_CLIENT_SECRET)" # Put this in pipeline secrets!
                 terraform apply -auto-approve
 
           
