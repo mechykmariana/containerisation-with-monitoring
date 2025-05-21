@@ -6,4 +6,5 @@ apt install -y docker.io docker-compose
 systemctl start docker
 systemctl enable docker
 cd /home/marianamechyk/app
+docker-compose down
 docker-compose up -d
