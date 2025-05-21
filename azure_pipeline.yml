@@ -101,12 +101,23 @@ stages:
           #     commandOptions: '-auto-approve'
 
           - task: AzureCLI@2
+            displayName: 'Terraform Init'
             inputs:
               azureSubscription: 'terraform-connection'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
+              workingDirectory: 'terraform/azure'
               inlineScript: |
                 terraform init
+
+          - task: AzureCLI@2
+            displayName: 'Terraform Apply'
+            inputs:
+              azureSubscription: 'terraform-connection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              workingDirectory: 'terraform/azure'
+              inlineScript: |
                 terraform apply -auto-approve
 
           
