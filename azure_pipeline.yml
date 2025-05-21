@@ -83,22 +83,31 @@ stages:
             displayName: 'Debug Azure Environment Variables'
 
 
-          - task: TerraformCLI@2
-            displayName: 'Terraform Init'
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              environmentServiceNameAzureRM: 'terraform-connection'
-              workingDirectory: 'terraform/azure'
+          # - task: TerraformCLI@2
+          #   displayName: 'Terraform Init'
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'init'
+          #     environmentServiceNameAzureRM: 'terraform-connection'
+          #     workingDirectory: 'terraform/azure'
 
-          - task: TerraformCLI@2
-            displayName: 'Terraform Apply'
+          # - task: TerraformCLI@2
+          #   displayName: 'Terraform Apply'
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'apply'
+          #     environmentServiceNameAzureRM: 'terraform-connection'
+          #     workingDirectory: 'terraform/azure'
+          #     commandOptions: '-auto-approve'
+
+          - task: AzureCLI@2
             inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              environmentServiceNameAzureRM: 'terraform-connection'
-              workingDirectory: 'terraform/azure'
-              commandOptions: '-auto-approve'
+              azureSubscription: 'terraform-connection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                terraform init
+                terraform apply -auto-approve
 
           
               
